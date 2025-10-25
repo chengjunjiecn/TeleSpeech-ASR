@@ -1,3 +1,3 @@
-PYTHONPATH="/path/to/fairseq:$PWD:$PYTHONPATH"
+PYTHONPATH="/kaggle/working/fairseq:$PWD:$PYTHONPATH"
 export PYTHONPATH
 export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
