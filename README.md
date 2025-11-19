@@ -91,14 +91,6 @@ utt:X0000000001_100849618_S00006	feat:/data/raw_nnaudio.test.1.ark:2984296665	fe
 ...
 ```
 
-* 预训练模型表征训练ASR任务阶段，需要准备wenet格式的`lang_char.txt`，相比于`dict.${label}.txt`额外添加`<blank>`, `<unk>`, `<sos/eos>`3个token，例如
-```
-<blank> 0
-<unk> 1
-是 2
-好 3
-...
-<sos/eos> 5536
 ```
 
 # 微调模型推理流程示例*
@@ -137,45 +129,6 @@ utt:X0000000001_100849618_S00006	feat:/data/raw_nnaudio.test.1.ark:2984296665	fe
     $ bash run_scripts/decode.sh
     ```
 
-# 表征训练下游任务
-<a id="表征训练下游任务"></a>
-
-* 进入wenet_representation路径，修改`path.sh`文件中`fairseq`, `data2vec_dialect`, `wenet_representation`相关路径
-
-* 连续表征训练与解码：
-  * 配置`run_d2v.sh`中dataset相关内容，执行
-    ```shell script
-    $ bash run_d2v.sh
-    ```
-
-* 离散表征训练与解码：
-  * 首先根据`data.list`，准备离散表征对应训练文件`data.list.discrete`，修改`wenet/discrete_token/kmeans_d2v.yaml`中`model_dir`和`user_dir`，执行
-    ```
-    $ bash wenet/discrete_token/dump_feat.sh
-    ```
-  * 再配置`run_discrete.sh`中dataset相关内容，执行
-    ```
-    $ bash run_discrete.sh
-    ```
-# 开源数据集结果
-* 我们选择了多个开源中文数据集进行验证，以测试集上的字错误率 (Character Error Rate, CER) 结果作为衡量标准
-* 在Aishell-1上我们选择其Train集作为有监督数据进行训练，在Test集上统计CER
-* 在WenetSpeech上，我们分别使用100小时训练集Train_s和1000小时训练集Train_m分别作为有监督数据进行训练，在Test_Meeting测试集上统计CER
-* Babel为NIST（美国国家标准与技术研究院）举办的低资源粤语电话识别任务数据集，我们使用其提供的训练集与测试集统计CER
-* KeSpeech为中文多方言测试集，我们使用1396小时训练集作为有监督数据进行训练，选择提供的Test测试集统计CER
-
-|  模型版本         | Aishell-1 (%)| WenetSpeech* (%)| Babel (%) | KeSpeech (%) |
-| ----------| -------- | ------- | ---- | ---- |
-| pretrain_base | 4.7  | 18.3 / 16.4 | 22.1  | 10.9 |
-| pretrain_large | 4.0 | 14.3 / 13.0 | 19.1  | 8.1 |
-
-*WenetSpeech中的结果为分别使用 `train_s/train_m`训练后，在Test_Meeting上的CER
-
-<a id="KeSpeech各方言上结果"></a>
-KeSpeech各方言上结果（CER%）
-|  模型版本 | 普通话 | 北京 | 西南 | 中原 | 东北 | 兰银 | 江淮 | 冀鲁 | 胶辽 |
-| ---------| ------ | ---- | ---- | ---- |---- | ---- | ---- | ---- | ---- |
-| pretrain_large | 4.61 | 8.23 | 8.74 | 7.62 | 7.89 | 9.72 | 12.89 | 8.91 | 9.30 |
 
 # 声明与协议
 ## 声明
